@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Vijaykumar's Mutta Bonda Shop - Order Form</title>
+
+<style>
+body {
+    background-color: #fff3ea;
+    font-family: Arial;
+}
+
+.container {
+    width: 500px;
+    margin: auto;
+    padding: 25px;
+    background-color: white;
+    border: 3px solid darkred;
+}
+
+.title {
+    text-align: center;
+    color: darkred;
+}
+
+.field {
+    margin: 12px;
+}
+
+input {
+    padding: 8px;
+    width: 90%;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: darkred;
+    color: white;
+    border: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 class="title">Vijaykumar's Mutta Bonda Shop</h1>
+
+<h2>Online Order Form</h2>
+
+<form action="submit.html" method="post">
+
+<div class="field">
+<label>Customer Name:</label><br>
+<input type="text" name="name" placeholder="Enter your name">
+</div>
+
+<div class="field">
+<label>Phone Number:</label><br>
+<input type="text" name="phone" placeholder="Enter phone number">
+</div>
+
+<div class="field">
+<label>Delivery Address:</label><br>
+<input type="text" name="address" placeholder="Enter delivery address">
+</div>
+
+<div class="field">
+<label>Item Name:</label><br>
+<input type="text" name="item" placeholder="Enter item name">
+</div>
+
+<div class="field">
+<label>Quantity:</label><br>
+<input type="text" name="quantity" placeholder="Enter quantity">
+</div>
+
+<div class="field">
+<label>Payment Method:</label><br>
+<input type="text" name="payment" placeholder="Cash / UPI">
+</div>
+
+<center>
+<button type="submit">Place Order</button>
+<button type="reset">Clear</button>
+</center>
+
+</form>
+
+</div>
+
+</body>
+</html>
