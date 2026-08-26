@@ -481,7 +481,10 @@
         <div class="orders-section">
             <div class="orders-header">
                 <h3>Live Database Orders</h3>
-                <button class="btn btn-refresh" onclick="fetchOrdersFromDB()">↺ Refresh Orders</button>
+                <div>
+                    <button class="btn btn-refresh" onclick="fetchOrdersFromDB()">↺ Refresh Orders</button>
+                    <button class="btn btn-refresh" style="background: #c62828; margin-left: 6px;" onclick="clearAllOrders()">🗑 Clear All Orders</button>
+                </div>
             </div>
 
             <div class="orders-table-wrapper">
@@ -728,6 +731,22 @@
             });
 
             tbody.innerHTML = rowsHtml;
+        }
+
+        /**
+         * DHTML Action 5: Clear All Orders from Database & Browser Local Storage
+         */
+        async function clearAllOrders() {
+            if (!confirm('Are you sure you want to clear all order history from database?')) return;
+            
+            localStorage.removeItem('mutta_bonda_orders');
+            try {
+                await executeNeonQuery('TRUNCATE TABLE orders;');
+            } catch (e) {
+                console.warn('Neon DB truncate skipped or local only:', e.message);
+            }
+            showToast('🗑 All order history cleared successfully!', true);
+            await fetchOrdersFromDB();
         }
 
         /**

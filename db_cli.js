@@ -218,7 +218,7 @@ async function main() {
       }
       console.log('========================================\n');
     }
-    else if (command === '--stats') {
+    else if (command === '--stats' || command === '--stat') {
       console.log('\n========================================');
       console.log('Neon Database Order Statistics Summary');
       console.log('========================================');
