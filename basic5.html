@@ -44,9 +44,15 @@
     .btn-reset { background: #e0e0e0; color: #333; }
     .btn-refresh { background: #2b2b2b; color: white; padding: 6px 14px; font-size: 0.85rem; }
     .btn-danger { background: #c62828; color: white; padding: 6px 14px; font-size: 0.85rem; }
-    #toastAlert { display: none; padding: 12px 18px; border-radius: 8px; margin-bottom: 18px; font-weight: 700; text-align: center; }
-    .toast-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .toast-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    
+    /* Medium Size Confirmation Modal Popup */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-card { background: #fff; border-radius: 16px; padding: 30px 25px; width: 400px; max-width: 90%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.25); border: 3px solid #8b1a1a; animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes modalPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .modal-icon { font-size: 3rem; margin-bottom: 8px; }
+    .modal-title { color: #8b1a1a; font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
+    .modal-message { color: #555; font-size: 0.95rem; }
+
     .orders-section { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #e0d0c0; }
     .orders-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .orders-table-wrapper { overflow-x: auto; }
@@ -59,15 +65,22 @@
 </head>
 <body>
 
+  <!-- SECTION 1.5: MEDIUM SIZE ORDER CONFIRMATION MODAL POPUP -->
+  <div id="orderModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon">🎉</div>
+      <h2 class="modal-title">Order Successfully Placed!</h2>
+      <p class="modal-message">Thank you for ordering from Vijaykumar's Mutta Bonda Shop.</p>
+      <button type="button" class="btn btn-submit" onclick="closeModal()" style="margin-top: 20px; width: 100%;">OK</button>
+    </div>
+  </div>
+
   <div class="container">
     <!-- Header Banner -->
     <div class="header-banner">
       <h1 class="shop-title">Vijaykumar's Mutta Bonda Shop</h1>
       <p class="shop-subtitle">Order Online - Instant Billing & Live Database Saving</p>
     </div>
-
-    <!-- DHTML Toast Alert Notification -->
-    <div id="toastAlert"></div>
 
     <!-- SECTION 2: DHTML ORDER FORM -->
     <form id="orderForm" onsubmit="handleOrderSubmit(event)">
@@ -79,10 +92,6 @@
         <div class="field-group">
           <label for="phoneNumber">Phone Number *</label>
           <input type="tel" id="phoneNumber" name="phone" placeholder="10-digit mobile number" required>
-        </div>
-        <div class="field-group full-width">
-          <label for="deliveryAddress">Delivery Address *</label>
-          <input type="text" id="deliveryAddress" name="address" placeholder="Enter address in Coimbatore" required>
         </div>
         <div class="field-group">
           <label for="itemSelect">Select Food Item *</label>
@@ -120,6 +129,10 @@
         <div class="field-group">
           <label for="quantityInput">Quantity *</label>
           <input type="number" id="quantityInput" name="quantity" value="1" min="1" max="50" oninput="calculateTotal()" required>
+        </div>
+        <div class="field-group full-width">
+          <label for="deliveryAddress">Delivery Address *</label>
+          <input type="text" id="deliveryAddress" name="address" placeholder="Enter address in Coimbatore" required>
         </div>
         <div class="field-group full-width">
           <label for="paymentMethod">Payment Method *</label>
@@ -181,6 +194,9 @@
       httpEndpoint: 'https://ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/sql'
     };
 
+    function showModalPopup() { document.getElementById('orderModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+
     function getLocalOrders() { try { return JSON.parse(localStorage.getItem('mutta_bonda_orders') || '[]'); } catch (e) { return []; } }
     function saveLocalOrder(order) { const orders = getLocalOrders(); orders.unshift(order); localStorage.setItem('mutta_bonda_orders', JSON.stringify(orders.slice(0, 30))); }
 
@@ -211,14 +227,6 @@
       return await response.json();
     }
 
-    function showToast(message, isSuccess = true) {
-      const toast = document.getElementById('toastAlert');
-      toast.innerText = message;
-      toast.className = isSuccess ? 'toast-success' : 'toast-error';
-      toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 5000);
-    }
-
     async function handleOrderSubmit(event) {
       event.preventDefault();
       const btnSubmit = document.getElementById('btnSubmit');
@@ -243,14 +251,16 @@
           newOrderId = localId;
         }
 
-        showToast(savedToCloud ? `🎉 Order #${newOrderId} saved to cloud database!` : `🎉 Order #${newOrderId} recorded in local order history!`, true);
+        // Show Medium Confirmation Popup Modal
+        showModalPopup();
+
         document.getElementById('customerName').value = '';
         document.getElementById('phoneNumber').value = '';
         document.getElementById('deliveryAddress').value = '';
         calculateTotal();
         await fetchOrdersFromDB();
       } catch (error) {
-        showToast(`❌ Could not complete order: ${error.message}`, false);
+        alert(`Could not complete order: ${error.message}`);
       } finally {
         btnSubmit.disabled = false;
         btnSubmit.innerText = 'Place Order';
@@ -282,7 +292,6 @@
       if (!confirm('Are you sure you want to clear all order history?')) return;
       localStorage.removeItem('mutta_bonda_orders');
       try { await executeNeonQuery('TRUNCATE TABLE orders;'); } catch (e) {}
-      showToast('🗑 All order history cleared successfully!', true);
       await fetchOrdersFromDB();
     }
 
