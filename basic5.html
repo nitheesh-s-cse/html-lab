@@ -519,7 +519,7 @@
     <script>
         // Neon PostgreSQL Configuration
         const NEON_CONFIG = {
-            connectionString: 'postgresql://neondb_owner:npg_GgY6AjXHNsF3@ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require',
+            connectionString: window.NEON_DATABASE_URL || 'postgresql://neondb_owner:CONFIGURED_PASSWORD@ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require',
             httpEndpoint: 'https://ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/sql'
         };
 

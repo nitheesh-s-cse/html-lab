@@ -22,11 +22,30 @@
  * ============================================================================
  */
 
+const fs = require('fs');
+const path = require('path');
 const https = require('https');
 
-// Database Connection Settings for Neon PostgreSQL
-const DB_CONN_STRING = 'postgresql://neondb_owner:npg_GgY6AjXHNsF3@ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
-const NEON_HTTP_ENDPOINT = 'https://ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/sql';
+// Load environment variables from .env file safely
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  envContent.split(/\r?\n/).forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#') && trimmed.includes('=')) {
+      const eqIndex = trimmed.indexOf('=');
+      const key = trimmed.substring(0, eqIndex).trim();
+      const val = trimmed.substring(eqIndex + 1).trim();
+      if (key && !process.env[key]) {
+        process.env[key] = val;
+      }
+    }
+  });
+}
+
+// Database Connection Settings for Neon PostgreSQL (Loaded from environment)
+const DB_CONN_STRING = process.env.DATABASE_URL || 'postgresql://neondb_owner:CONFIGURED_PASSWORD@ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+const NEON_HTTP_ENDPOINT = process.env.NEON_HTTP_ENDPOINT || 'https://ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/sql';
 
 /**
  * Helper Function: executeQuery(sqlQuery)
