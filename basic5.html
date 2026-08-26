@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--
+  ================================================================================
+  VIJAYKUMAR'S MUTTA BONDA SHOP - DHTML & NEON POSTGRESQL ORDER MANAGEMENT SYSTEM
+  ================================================================================
+  
+  [COMPLETE COMMAND LINE GUIDE FOR TEACHER & STUDENTS]
+  --------------------------------------------------------------------------------
+  This DHTML web application connects directly to Neon Cloud PostgreSQL Database.
+  You can manage and test every section of the application via Terminal / CLI!
+
+  Terminal Commands to run in Command Prompt / PowerShell / Bash:
+  --------------------------------------------------------------------------------
+  1. Show All Available Commands & Help Guide:
+     node db_cli.js --help
+
+  2. Test Cloud PostgreSQL Database Connection:
+     node db_cli.js --test
+
+  3. Display Live Orders Table in Terminal:
+     node db_cli.js --list
+
+  4. View Sales Statistics & Revenue Summary:
+     node db_cli.js --stats
+
+  5. Display Full Vijaykumar's Mutta Bonda Shop Menu Card:
+     node db_cli.js --menu
+
+  6. View Database Table Schema & Structure:
+     node db_cli.js --schema
+
+  7. Add a New Order via Command Line:
+     node db_cli.js --add "Ramesh" "9876543210" "Coimbatore" "Chicken Mutta Bonda" 2 60 "UPI"
+
+  8. Clear / Reset All Orders in Database:
+     node db_cli.js --clear
+  ================================================================================
+-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vijaykumar's Mutta Bonda Shop - DHTML Order System</title>
+
+    <!-- ==========================================================================
+       SECTION 1: DHTML CSS STYLES & INTERACTIVE VISUAL EFFECTS
+       ========================================================================== -->
+    <style>
+        /* Reset and Core Theme Tokens */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #8b1a1a;
+            --primary-dark: #5c1010;
+            --accent-gold: #f5c518;
+            --accent-orange: #ff9f1c;
+            --bg-cream: #fff8f0;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #2b2b2b;
+            --border-color: #e0d0c0;
+            --success-green: #2e7d32;
+            --error-red: #c62828;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #fff8f0 0%, #ffe9d6 50%, #ffd9b3 100%);
+            min-height: 100vh;
+            padding: 30px 15px;
+            color: var(--text-dark);
+        }
+
+        /* Container Card Layout */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(139, 26, 26, 0.15);
+            border: 3px solid var(--primary-color);
+            position: relative;
+        }
+
+        /* Header & Titles */
+        .header-banner {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--accent-orange);
+        }
+
+        .shop-title {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-subtitle {
+            color: #6b5b4e;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Form Fields Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field-group.full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 600px) {
+            .field-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        label {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        input,
+        select,
+        textarea {
+            padding: 11px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(139, 26, 26, 0.25);
+        }
+
+        /* Live DHTML Calculation Card */
+        .bill-summary {
+            background: #fff8f0;
+            border: 2px dashed var(--accent-orange);
+            border-radius: 12px;
+            padding: 18px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bill-details p {
+            margin: 4px 0;
+            font-size: 0.95rem;
+        }
+
+        .grand-total {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        /* Buttons & Interactive DHTML Elements */
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+            margin: 0 8px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            box-shadow: 0 6px 16px rgba(139, 26, 26, 0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 26, 26, 0.4);
+        }
+
+        .btn-reset {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-reset:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-refresh {
+            background: #2b2b2b;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+
+        /* Status Notifications & Dynamic Toast */
+        #toastAlert {
+            display: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .toast-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .toast-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Live Orders Table Section */
+        .orders-section {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 2px dashed var(--border-color);
+        }
+
+        .orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .orders-header h3 {
+            color: var(--primary-color);
+        }
+
+        .orders-table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fff9f4;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* Navigation Bar */
+        .top-nav {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .top-nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            margin: 0 10px;
+            font-size: 0.95rem;
+        }
+
+        .top-nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header Banner -->
+        <div class="header-banner">
+            <h1 class="shop-title">Vijaykumar's Mutta Bonda Shop</h1>
+            <p class="shop-subtitle">Order Online - Instant Billing & Live Database Saving</p>
+        </div>
+
+        <!-- DHTML Toast Alert Area -->
+        <div id="toastAlert"></div>
+
+        <!-- ==========================================================================
+         SECTION 2: DHTML ORDER FORM (HTML STRUCTURE & INPUTS)
+         ========================================================================== -->
+        <form id="orderForm" onsubmit="handleOrderSubmit(event)">
+
+            <div class="form-grid">
+
+                <!-- Customer Name -->
+                <div class="field-group">
+                    <label for="customerName">Customer Name *</label>
+                    <input type="text" id="customerName" name="name" placeholder="Enter your full name" required
+                        oninput="validateForm()">
+                </div>
+
+                <!-- Phone Number -->
+                <div class="field-group">
+                    <label for="phoneNumber">Phone Number *</label>
+                    <input type="tel" id="phoneNumber" name="phone" placeholder="10-digit mobile number" required
+                        oninput="validateForm()">
+                </div>
+
+                <!-- Delivery Address -->
+                <div class="field-group full-width">
+                    <label for="deliveryAddress">Delivery Address *</label>
+                    <input type="text" id="deliveryAddress" name="address"
+                        placeholder="Enter complete address in Coimbatore" required oninput="validateForm()">
+                </div>
+
+                <!-- Item Selection Dropdown -->
+                <div class="field-group">
+                    <label for="itemSelect">Select Food Item *</label>
+                    <select id="itemSelect" name="item" onchange="calculateTotal()" required>
+                        <optgroup label="🌟 Special Bonda">
+                            <option value="Chicken Mutta Bonda" data-price="60" selected>Chicken Mutta Bonda - ₹60
+                            </option>
+                        </optgroup>
+                        <optgroup label="🥬 Veg Bonda">
+                            <option value="Kaara Bonda" data-price="20">Kaara Bonda - ₹20</option>
+                            <option value="Keerai Bonda" data-price="20">Keerai Bonda - ₹20</option>
+                            <option value="Murunga Keerai Bonda" data-price="25">Murunga Keerai Bonda - ₹25</option>
+                            <option value="Thandu Keerai Bonda" data-price="25">Thandu Keerai Bonda - ₹25</option>
+                            <option value="Paneer Bonda" data-price="35">Paneer Bonda - ₹35</option>
+                            <option value="Cheese Bonda" data-price="40">Cheese Bonda - ₹40</option>
+                        </optgroup>
+                        <optgroup label="🍖 Non-Veg Bonda">
+                            <option value="Beef Bonda" data-price="55">Beef Bonda - ₹55</option>
+                            <option value="Mutton Bonda" data-price="65">Mutton Bonda - ₹65</option>
+                        </optgroup>
+                        <optgroup label="☕ Tea">
+                            <option value="Normal Tea" data-price="10">Normal Tea - ₹10</option>
+                            <option value="Ginger Tea" data-price="12">Ginger Tea - ₹12</option>
+                            <option value="Black Tea" data-price="10">Black Tea - ₹10</option>
+                            <option value="Masala Tea" data-price="15">Masala Tea - ₹15</option>
+                            <option value="Green Tea" data-price="15">Green Tea - ₹15</option>
+                        </optgroup>
+                        <optgroup label="☕ Coffee & Hot Drinks">
+                            <option value="Filter Coffee" data-price="15">Filter Coffee - ₹15</option>
+                            <option value="Bru Coffee" data-price="15">Bru Coffee - ₹15</option>
+                            <option value="Cold Coffee" data-price="40">Cold Coffee - ₹40</option>
+                            <option value="Boost" data-price="20">Boost - ₹20</option>
+                            <option value="Horlicks" data-price="20">Horlicks - ₹20</option>
+                            <option value="Badam Milk" data-price="30">Badam Milk - ₹30</option>
+                        </optgroup>
+                        <optgroup label="🍹 Juices">
+                            <option value="Mint Juice" data-price="25">Mint Juice - ₹25</option>
+                            <option value="Lemon Mint" data-price="25">Lemon Mint - ₹25</option>
+                            <option value="Watermelon Juice" data-price="30">Watermelon Juice - ₹30</option>
+                            <option value="Mosambi Juice" data-price="30">Mosambi Juice - ₹30</option>
+                            <option value="Fresh Lime Soda" data-price="20">Fresh Lime Soda - ₹20</option>
+                        </optgroup>
+                        <optgroup label="🎁 Combo Offers">
+                            <option value="Kaara Bonda + Chicken Mutta Bonda (Free Tea)" data-price="80">Kaara Bonda +
+                                Chicken Mutta Bonda (Free Tea) - ₹80</option>
+                            <option value="Family Bonda Combo (Free Coke + Cupcake)" data-price="200">Family Bonda Combo
+                                (Free Coke + Cupcake) - ₹200</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- Quantity Input -->
+                <div class="field-group">
+                    <label for="quantityInput">Quantity *</label>
+                    <input type="number" id="quantityInput" name="quantity" value="1" min="1" max="50"
+                        oninput="calculateTotal()" required>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="field-group full-width">
+                    <label for="paymentMethod">Payment Method *</label>
+                    <select id="paymentMethod" name="payment" required>
+                        <option value="UPI / GPay / PhonePe">UPI / GPay / PhonePe</option>
+                        <option value="Cash on Delivery">Cash on Delivery</option>
+                        <option value="Card Payment">Debit / Credit Card</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- Live DHTML Price Calculation Box -->
+            <div class="bill-summary">
+                <div class="bill-details">
+                    <p>Selected Item: <strong id="summaryItemName">Chicken Mutta Bonda</strong></p>
+                    <p>Unit Price: ₹<span id="summaryUnitPrice">60.00</span> | Quantity: <span id="summaryQty">1</span>
+                    </p>
+                </div>
+                <div>
+                    <span style="font-size: 0.85rem; color: #666; display: block; text-align: right;">Total
+                        Amount</span>
+                    <div class="grand-total">₹<span id="summaryGrandTotal">60.00</span></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button type="submit" id="btnSubmit" class="btn btn-submit">Place Order</button>
+                <button type="reset" class="btn btn-reset" onclick="setTimeout(calculateTotal, 50)">Clear Form</button>
+            </div>
+
+        </form>
+
+        <!-- ==========================================================================
+         SECTION 3: LIVE NEON POSTGRESQL ORDERS DISPLAY (DOM TABLE)
+         ========================================================================== -->
+        <div class="orders-section">
+            <div class="orders-header">
+                <h3>Live Database Orders (Neon PostgreSQL)</h3>
+                <button class="btn btn-refresh" onclick="fetchOrdersFromDB()">↺ Refresh Orders</button>
+            </div>
+
+            <div class="orders-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer</th>
+                            <th>Phone</th>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; color: #888;">Loading orders from database...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==========================================================================
+       SECTION 4: DHTML JAVASCRIPT & NEON POSTGRESQL DATABASE INTEGRATION
+       ========================================================================== -->
+    <script>
+        // Neon PostgreSQL Configuration
+        const NEON_CONFIG = {
+            connectionString: 'postgresql://neondb_owner:npg_GgY6AjXHNsF3@ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require',
+            httpEndpoint: 'https://ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/sql'
+        };
+
+        /**
+         * DHTML Action 1: Real-Time Price & Total Calculation
+         * Reads values from input elements and dynamically updates the DOM elements.
+         */
+        function calculateTotal() {
+            const itemSelect = document.getElementById('itemSelect');
+            const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+            const unitPrice = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+            const itemName = selectedOption.value;
+
+            const qtyInput = document.getElementById('quantityInput');
+            let qty = parseInt(qtyInput.value, 10);
+            if (isNaN(qty) || qty < 1) qty = 1;
+
+            const grandTotal = unitPrice * qty;
+
+            // Dynamic DOM Updates (DHTML)
+            document.getElementById('summaryItemName').innerText = itemName;
+            document.getElementById('summaryUnitPrice').innerText = unitPrice.toFixed(2);
+            document.getElementById('summaryQty').innerText = qty;
+            document.getElementById('summaryGrandTotal').innerText = grandTotal.toFixed(2);
+
+            return { itemName, unitPrice, qty, grandTotal };
+        }
+
+        /**
+         * Helper function to execute SQL query on Neon PostgreSQL via HTTP API
+         */
+        async function executeNeonQuery(sqlQuery) {
+            const response = await fetch(NEON_CONFIG.httpEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Neon-Connection-String': NEON_CONFIG.connectionString,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: sqlQuery })
+            });
+
+            if (!response.ok) {
+                const errText = await response.text();
+                throw new Error(`Neon DB Error (${response.status}): ${errText}`);
+            }
+
+            return await response.json();
+        }
+
+        /**
+         * DHTML Action 2: Show Toast Notifications
+         */
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toastAlert');
+            toast.innerText = message;
+            toast.className = isSuccess ? 'toast-success' : 'toast-error';
+            toast.style.display = 'block';
+
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 5000);
+        }
+
+        /**
+         * DHTML Action 3: Handle Form Submission and Save Order to Neon Database
+         */
+        async function handleOrderSubmit(event) {
+            event.preventDefault();
+
+            const btnSubmit = document.getElementById('btnSubmit');
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = 'Saving to Database...';
+
+            try {
+                const customerName = document.getElementById('customerName').value.trim();
+                const phoneNumber = document.getElementById('phoneNumber').value.trim();
+                const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+                const paymentMethod = document.getElementById('paymentMethod').value;
+
+                const { itemName, unitPrice, qty, grandTotal } = calculateTotal();
+
+                // SQL Injection-safe sanitization for basic demo
+                const cleanName = customerName.replace(/'/g, "''");
+                const cleanPhone = phoneNumber.replace(/'/g, "''");
+                const cleanAddress = deliveryAddress.replace(/'/g, "''");
+                const cleanItem = itemName.replace(/'/g, "''");
+                const cleanPayment = paymentMethod.replace(/'/g, "''");
+
+                const insertSql = `
+          INSERT INTO orders (customer_name, phone_number, delivery_address, item_name, quantity, unit_price, total_price, payment_method)
+          VALUES ('${cleanName}', '${cleanPhone}', '${cleanAddress}', '${cleanItem}', ${qty}, ${unitPrice}, ${grandTotal}, '${cleanPayment}')
+          RETURNING id;
+        `;
+
+                const result = await executeNeonQuery(insertSql);
+                const newOrderId = result.rows && result.rows[0] ? result.rows[0].id : 'OK';
+
+                showToast(`🎉 Order #${newOrderId} placed successfully! Saved to Neon PostgreSQL database.`, true);
+
+                // Reset form inputs except defaults
+                document.getElementById('customerName').value = '';
+                document.getElementById('phoneNumber').value = '';
+                document.getElementById('deliveryAddress').value = '';
+
+                calculateTotal();
+
+                // Refresh orders table automatically via DHTML
+                await fetchOrdersFromDB();
+
+            } catch (error) {
+                console.error('Order Submit Error:', error);
+                showToast(`❌ Failed to save order: ${error.message}`, false);
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = 'Place Order';
+            }
+        }
+
+        /**
+         * DHTML Action 4: Fetch Live Orders from Neon PostgreSQL and Render Table
+         */
+        async function fetchOrdersFromDB() {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #888;">Fetching live records from Neon DB...</td></tr>';
+
+            try {
+                const selectSql = 'SELECT * FROM orders ORDER BY id DESC LIMIT 15;';
+                const data = await executeNeonQuery(selectSql);
+
+                if (!data.rows || data.rows.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #888;">No orders recorded in database yet. Place your first order above!</td></tr>';
+                    return;
+                }
+
+                // Build HTML table rows dynamically (DHTML DOM Insertion)
+                let rowsHtml = '';
+                data.rows.forEach(row => {
+                    rowsHtml += `
+            <tr>
+              <td><strong>#${row.id}</strong></td>
+              <td>${escapeHtml(row.customer_name)}</td>
+              <td>${escapeHtml(row.phone_number)}</td>
+              <td>${escapeHtml(row.item_name)}</td>
+              <td>${row.quantity}</td>
+              <td><strong>₹${parseFloat(row.total_price).toFixed(2)}</strong></td>
+              <td>${escapeHtml(row.payment_method)}</td>
+              <td><span class="status-badge">Received</span></td>
+            </tr>
+          `;
+                });
+
+                tbody.innerHTML = rowsHtml;
+
+            } catch (error) {
+                console.error('Fetch Orders Error:', error);
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--error-red);">Error fetching orders: ${error.message}</td></tr>`;
+            }
+        }
+
+        /**
+         * Helper to escape HTML characters
+         */
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        // Initialize DHTML on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            calculateTotal();
+            fetchOrdersFromDB();
+        });
+    </script>
+
+</body>
+
+</html>

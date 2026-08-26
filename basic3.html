@@ -1,133 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Vijaykumar's Mutta Bonda Shop</title>
+<!--
+  ================================================================================
+  VIJAYKUMAR'S MUTTA BONDA SHOP - BASIC 3: MENU TABLES & LISTS
+  ================================================================================
+  
+  [EXPLANATION & COMMAND LINE GUIDE FOR TEACHER / EVALUATION]
+  --------------------------------------------------------------------------------
+  Purpose:
+  Demonstrates Internal CSS (<style>), External CSS (<link rel="stylesheet">),
+  HTML Tables (<table>, <th>, <td>), Ordered Lists (<ol>), Unordered Lists (<ul>),
+  and custom styled action buttons (<button>).
 
-<!-- Internal Style Sheet -->
-<style>
-body {
-    background-color: #fff8f0;
-    font-family: Arial;
-}
+  How to view/test this file:
+  - Open directly in browser: basic3.html
+  - Command Line preview via Node CLI tool:
+    node db_cli.js --menu
+  ================================================================================
+-->
+  <meta charset="UTF-8">
+  <title>Vijaykumar's Mutta Bonda Shop - Menu & Features</title>
 
-h1 {
-    color: darkred;
-    text-align: center;
-}
+  <!-- ==========================================================================
+       SECTION 1: INTERNAL CSS STYLE SHEET
+       ========================================================================== -->
+  <style>
+    body {
+        background-color: #fff8f0;
+        font-family: Arial, sans-serif;
+    }
 
-h2 {
-    color: purple;
-}
+    h1 {
+        color: darkred;
+        text-align: center;
+    }
 
-table {
-    width: 80%;
-    border: 3px solid green;
-    border-collapse: collapse;
-}
+    h2 {
+        color: purple;
+    }
 
-th, td {
-    border: 2px solid green;
-    padding: 10px;
-    text-align: center;
-}
+    table {
+        width: 80%;
+        border: 3px solid green;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
 
-th {
-    background-color: lightblue;
-}
+    th, td {
+        border: 2px solid green;
+        padding: 10px;
+        text-align: center;
+    }
 
-li {
-    margin: 8px;
-}
-</style>
+    th {
+        background-color: lightblue;
+    }
 
-<!-- External Style Sheet -->
-<link rel="stylesheet" href="style.css">
+    li {
+        margin: 8px;
+    }
+  </style>
+
+  <!-- External Style Sheet Link -->
+  <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<h1>VIJAYKUMAR'S MUTTA BONDA SHOP</h1>
+  <h1>VIJAYKUMAR'S MUTTA BONDA SHOP</h1>
 
-<p style="background-color: yellow; color: darkred; text-align:center;">
+  <p style="background-color: yellow; color: darkred; text-align:center; padding: 8px;">
     Welcome to Vijaykumar's Mutta Bonda Shop – Fresh, Hot and Tasty!
-</p>
+  </p>
 
-<hr>
+  <hr>
 
-<h2>Our Menu</h2>
+  <!-- ==========================================================================
+       SECTION 2: HTML MENU DATA TABLE
+       ========================================================================== -->
+  <h2>Our Menu</h2>
 
-<!-- Table -->
-<center>
-<table>
-<tr>
-<th>Item</th>
-<th>Price</th>
-<th>Category</th>
-</tr>
+  <center>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Price</th>
+          <th>Category</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Chicken Mutta Bonda</td>
+          <td>&#8377;60</td>
+          <td>Special Bonda</td>
+        </tr>
+        <tr>
+          <td>Kaara Bonda</td>
+          <td>&#8377;20</td>
+          <td>Veg Bonda</td>
+        </tr>
+        <tr>
+          <td>Masala Tea</td>
+          <td>&#8377;15</td>
+          <td>Tea</td>
+        </tr>
+        <tr>
+          <td>Filter Coffee</td>
+          <td>&#8377;15</td>
+          <td>Coffee</td>
+        </tr>
+      </tbody>
+    </table>
+  </center>
 
-<tr>
-<td>Chicken Mutta Bonda</td>
-<td>&#8377;60</td>
-<td>Special Bonda</td>
-</tr>
 
-<tr>
-<td>Kaara Bonda</td>
-<td>&#8377;20</td>
-<td>Veg Bonda</td>
-</tr>
+  <!-- ==========================================================================
+       SECTION 3: ORDERING INSTRUCTIONS (ORDERED LIST <ol>)
+       ========================================================================== -->
+  <h2>How to Order</h2>
 
-<tr>
-<td>Masala Tea</td>
-<td>&#8377;15</td>
-<td>Tea</td>
-</tr>
+  <ol>
+    <li>Choose your items</li>
+    <li>Message us on WhatsApp</li>
+    <li>Confirm your order</li>
+    <li>Wait while we prepare it fresh</li>
+    <li>Collect or receive your order</li>
+  </ol>
 
-<tr>
-<td>Filter Coffee</td>
-<td>&#8377;15</td>
-<td>Coffee</td>
-</tr>
-</table>
-</center>
 
-<h2>How to Order</h2>
+  <!-- ==========================================================================
+       SECTION 4: SHOP FEATURES (UNORDERED LIST <ul>)
+       ========================================================================== -->
+  <h2>Our Features</h2>
 
-<!-- Ordered List -->
-<ol>
-<li>Choose your items</li>
-<li>Message us on WhatsApp</li>
-<li>Confirm your order</li>
-<li>Wait while we prepare it fresh</li>
-<li>Collect or receive your order</li>
-</ol>
+  <ul>
+    <li>Fresh Ingredients</li>
+    <li>Hygienic Preparation</li>
+    <li>Quick Service</li>
+    <li>Home Delivery</li>
+    <li>Combo Offers</li>
+  </ul>
 
-<h2>Our Features</h2>
 
-<!-- Unordered List -->
-<ul>
-<li>Fresh Ingredients</li>
-<li>Hygienic Preparation</li>
-<li>Quick Service</li>
-<li>Home Delivery</li>
-<li>Combo Offers</li>
-</ul>
+  <!-- ==========================================================================
+       SECTION 5: ACTION BUTTONS (INLINE & CLASS STYLES)
+       ========================================================================== -->
+  <h2>Order From Us</h2>
 
-<h2>Order From Us</h2>
+  <button style="background-color:blue; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer;">
+    Order Now
+  </button>
 
-<!-- Buttons -->
-<button style="background-color:blue; color:white; padding:10px;">
-Order Now
-</button>
+  <button style="background-color:green; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer;">
+    View Menu
+  </button>
 
-<button style="background-color:green; color:white; padding:10px;">
-View Menu
-</button>
-
-<button class="mybutton">
-Contact Us
-</button>
+  <button class="mybutton">
+    Contact Us
+  </button>
 
 </body>
 </html>

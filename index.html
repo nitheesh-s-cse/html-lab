@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+  ================================================================================
+  VIJAYKUMAR'S MUTTA BONDA SHOP - MAIN PORTAL HOMEPAGE (index.html)
+  ================================================================================
+  
+  [EXPLANATION & COMMAND LINE GUIDE FOR TEACHER / EVALUATION]
+  --------------------------------------------------------------------------------
+  Purpose:
+  Main landing portal linking all lab assignments (basic1.html to basic5.html).
+  Uses modern CSS Glassmorphism, CSS keyframe animations (@keyframes blobFloat, floatUp),
+  CSS Grid layout, and animated egg particles.
+
+  Terminal Commands for Database & Project Evaluation:
+  --------------------------------------------------------------------------------
+  1. View All CLI Commands   : node db_cli.js --help
+  2. Test Cloud PostgreSQL DB : node db_cli.js --test
+  3. View Saved Orders       : node db_cli.js --list
+  4. View Sales Statistics   : node db_cli.js --stats
+  5. View Shop Menu          : node db_cli.js --menu
+  6. View DB Schema          : node db_cli.js --schema
+  ================================================================================
+-->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vijaykumar's Mutta Bonda Shop</title>
@@ -167,6 +189,7 @@
     .nav-item:nth-child(3) { animation-delay: 0.8s; }
     .nav-item:nth-child(4) { animation-delay: 0.95s; }
     .nav-item:nth-child(5) { animation-delay: 1.1s; }
+    .nav-item:nth-child(6) { animation-delay: 1.25s; }
 
     /* shine sweep */
     .nav-item::before {
@@ -280,8 +303,13 @@
       </a>
       <a class="nav-item" href="basic4.html">
         <div class="icon">📝</div>
-        <div class="label">Order Form</div>
+        <div class="label">Basic Form</div>
         <div class="desc">Place your order</div>
+      </a>
+      <a class="nav-item" href="basic5.html">
+        <div class="icon">⚡</div>
+        <div class="label">DHTML Order System</div>
+        <div class="desc">Live Neon DB Order Form</div>
       </a>
       <a class="nav-item" href="https://mutta-bonda.vercel.app/" target="_blank" rel="noopener">
         <div class="icon">🌐</div>

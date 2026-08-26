@@ -1,94 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Vijaykumar's Mutta Bonda Shop - Order Form</title>
+<!--
+  ================================================================================
+  VIJAYKUMAR'S MUTTA BONDA SHOP - BASIC 4: HTML ORDER FORM
+  ================================================================================
+  
+  [EXPLANATION & COMMAND LINE GUIDE FOR TEACHER / EVALUATION]
+  --------------------------------------------------------------------------------
+  Purpose:
+  Demonstrates HTML Forms (<form action="..." method="post">), Form Inputs (<input>),
+  Field Labels (<label>), Container Box Layout (.container), and Form Control Buttons
+  (<button type="submit"> and <button type="reset">).
 
-<style>
-body {
-    background-color: #fff3ea;
-    font-family: Arial;
-}
+  How to view/test this file:
+  - Open directly in browser: basic4.html
+  - Compare with DHTML & Database Form in basic5.html:
+    node db_cli.js --list
+  ================================================================================
+-->
+  <meta charset="UTF-8">
+  <title>Vijaykumar's Mutta Bonda Shop - Order Form</title>
 
-.container {
-    width: 500px;
-    margin: auto;
-    padding: 25px;
-    background-color: white;
-    border: 3px solid darkred;
-}
+  <!-- ==========================================================================
+       SECTION 1: CONTAINER CARD & FORM STYLES
+       ========================================================================== -->
+  <style>
+    body {
+        background-color: #fff3ea;
+        font-family: Arial, sans-serif;
+    }
 
-.title {
-    text-align: center;
-    color: darkred;
-}
+    .container {
+        width: 500px;
+        margin: 40px auto;
+        padding: 25px;
+        background-color: white;
+        border: 3px solid darkred;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
 
-.field {
-    margin: 12px;
-}
+    .title {
+        text-align: center;
+        color: darkred;
+    }
 
-input {
-    padding: 8px;
-    width: 90%;
-}
+    .field {
+        margin: 12px 0;
+    }
 
-button {
-    padding: 10px 20px;
-    margin: 5px;
-    background-color: darkred;
-    color: white;
-    border: none;
-}
-</style>
+    label {
+        font-weight: bold;
+    }
+
+    input {
+        padding: 8px;
+        width: 95%;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        padding: 10px 20px;
+        margin: 10px 5px 0 5px;
+        background-color: darkred;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: maroon;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+  <div class="container">
 
-<h1 class="title">Vijaykumar's Mutta Bonda Shop</h1>
+    <!-- ==========================================================================
+         SECTION 2: FORM HEADER & INPUT FIELDS
+         ========================================================================== -->
+    <h1 class="title">Vijaykumar's Mutta Bonda Shop</h1>
 
-<h2>Online Order Form</h2>
+    <h2 style="text-align:center; color: #555;">Online Order Form</h2>
 
-<form action="submit.html" method="post">
+    <form action="submit.html" method="post">
 
-<div class="field">
-<label>Customer Name:</label><br>
-<input type="text" name="name" placeholder="Enter your name">
-</div>
+      <!-- Customer Name Field -->
+      <div class="field">
+        <label for="nameInput">Customer Name:</label><br>
+        <input type="text" id="nameInput" name="name" placeholder="Enter your name">
+      </div>
 
-<div class="field">
-<label>Phone Number:</label><br>
-<input type="text" name="phone" placeholder="Enter phone number">
-</div>
+      <!-- Phone Number Field -->
+      <div class="field">
+        <label for="phoneInput">Phone Number:</label><br>
+        <input type="text" id="phoneInput" name="phone" placeholder="Enter phone number">
+      </div>
 
-<div class="field">
-<label>Delivery Address:</label><br>
-<input type="text" name="address" placeholder="Enter delivery address">
-</div>
+      <!-- Delivery Address Field -->
+      <div class="field">
+        <label for="addressInput">Delivery Address:</label><br>
+        <input type="text" id="addressInput" name="address" placeholder="Enter delivery address">
+      </div>
 
-<div class="field">
-<label>Item Name:</label><br>
-<input type="text" name="item" placeholder="Enter item name">
-</div>
+      <!-- Item Name Field -->
+      <div class="field">
+        <label for="itemInput">Item Name:</label><br>
+        <input type="text" id="itemInput" name="item" placeholder="Enter item name">
+      </div>
 
-<div class="field">
-<label>Quantity:</label><br>
-<input type="text" name="quantity" placeholder="Enter quantity">
-</div>
+      <!-- Quantity Field -->
+      <div class="field">
+        <label for="quantityInput">Quantity:</label><br>
+        <input type="text" id="quantityInput" name="quantity" placeholder="Enter quantity">
+      </div>
 
-<div class="field">
-<label>Payment Method:</label><br>
-<input type="text" name="payment" placeholder="Cash / UPI">
-</div>
+      <!-- Payment Method Field -->
+      <div class="field">
+        <label for="paymentInput">Payment Method:</label><br>
+        <input type="text" id="paymentInput" name="payment" placeholder="Cash / UPI">
+      </div>
 
-<center>
-<button type="submit">Place Order</button>
-<button type="reset">Clear</button>
-</center>
 
-</form>
+      <!-- ==========================================================================
+           SECTION 3: FORM ACTION BUTTONS (SUBMIT & RESET)
+           ========================================================================== -->
+      <center>
+        <button type="submit">Place Order</button>
+        <button type="reset">Clear</button>
+      </center>
 
-</div>
+    </form>
+
+  </div>
 
 </body>
 </html>
