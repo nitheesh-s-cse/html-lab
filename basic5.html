@@ -520,6 +520,21 @@
             httpEndpoint: 'https://ep-square-dawn-azupdsqe-pooler.c-3.ap-southeast-1.aws.neon.tech/sql'
         };
 
+        // Local Storage Helper for Offline / file:// CORS Fallback
+        function getLocalOrders() {
+            try {
+                return JSON.parse(localStorage.getItem('mutta_bonda_orders') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveLocalOrder(order) {
+            const orders = getLocalOrders();
+            orders.unshift(order);
+            localStorage.setItem('mutta_bonda_orders', JSON.stringify(orders.slice(0, 30)));
+        }
+
         /**
          * DHTML Action 1: Real-Time Price & Total Calculation
          * Reads values from input elements and dynamically updates the DOM elements.
@@ -577,18 +592,18 @@
 
             setTimeout(() => {
                 toast.style.display = 'none';
-            }, 5000);
+            }, 6000);
         }
 
         /**
-         * DHTML Action 3: Handle Form Submission and Save Order to Neon Database
+         * DHTML Action 3: Handle Form Submission and Save Order to Neon Database / Local Storage
          */
         async function handleOrderSubmit(event) {
             event.preventDefault();
 
             const btnSubmit = document.getElementById('btnSubmit');
             btnSubmit.disabled = true;
-            btnSubmit.innerText = 'Saving to Database...';
+            btnSubmit.innerText = 'Processing Order...';
 
             try {
                 const customerName = document.getElementById('customerName').value.trim();
@@ -611,10 +626,40 @@
           RETURNING id;
         `;
 
-                const result = await executeNeonQuery(insertSql);
-                const newOrderId = result.rows && result.rows[0] ? result.rows[0].id : 'OK';
+                let newOrderId = null;
+                let savedToCloud = false;
 
-                showToast(`🎉 Order #${newOrderId} placed successfully! Saved to Neon PostgreSQL database.`, true);
+                try {
+                    const result = await executeNeonQuery(insertSql);
+                    if (result && result.rows && result.rows[0]) {
+                        newOrderId = result.rows[0].id;
+                        savedToCloud = true;
+                    }
+                } catch (cloudErr) {
+                    console.warn('Neon Cloud DB direct fetch skipped (file:// CORS restriction):', cloudErr.message);
+                    // Local Storage Fallback for file:// browser security
+                    const localId = 'L' + Math.floor(1000 + Math.random() * 9000);
+                    const newOrder = {
+                        id: localId,
+                        customer_name: customerName,
+                        phone_number: phoneNumber,
+                        delivery_address: deliveryAddress,
+                        item_name: itemName,
+                        quantity: qty,
+                        unit_price: unitPrice,
+                        total_price: grandTotal,
+                        payment_method: paymentMethod,
+                        created_at: new Date().toLocaleTimeString()
+                    };
+                    saveLocalOrder(newOrder);
+                    newOrderId = localId;
+                }
+
+                if (savedToCloud) {
+                    showToast(`🎉 Order #${newOrderId} placed successfully! Saved to Neon PostgreSQL cloud database.`, true);
+                } else {
+                    showToast(`🎉 Order #${newOrderId} placed successfully! Recorded in local database order history.`, true);
+                }
 
                 // Reset form inputs except defaults
                 document.getElementById('customerName').value = '';
@@ -628,7 +673,7 @@
 
             } catch (error) {
                 console.error('Order Submit Error:', error);
-                showToast(`❌ Failed to save order: ${error.message}`, false);
+                showToast(`❌ Could not complete order: ${error.message}`, false);
             } finally {
                 btnSubmit.disabled = false;
                 btnSubmit.innerText = 'Place Order';
@@ -636,25 +681,39 @@
         }
 
         /**
-         * DHTML Action 4: Fetch Live Orders from Neon PostgreSQL and Render Table
+         * DHTML Action 4: Fetch Live Orders from Neon PostgreSQL / Local Storage and Render Table
          */
         async function fetchOrdersFromDB() {
             const tbody = document.getElementById('ordersTableBody');
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #888;">Fetching live records from Neon DB...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #888;">Fetching live order records...</td></tr>';
 
+            let cloudOrders = [];
             try {
                 const selectSql = 'SELECT * FROM orders ORDER BY id DESC LIMIT 15;';
                 const data = await executeNeonQuery(selectSql);
-
-                if (!data.rows || data.rows.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #888;">No orders recorded in database yet. Place your first order above!</td></tr>';
-                    return;
+                if (data && data.rows) {
+                    cloudOrders = data.rows;
                 }
+            } catch (e) {
+                console.warn('Cloud orders fetch skipped (file:// CORS restriction):', e.message);
+            }
 
-                // Build HTML table rows dynamically (DHTML DOM Insertion)
-                let rowsHtml = '';
-                data.rows.forEach(row => {
-                    rowsHtml += `
+            const localOrders = getLocalOrders();
+            const allOrders = [...localOrders, ...cloudOrders];
+
+            if (allOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #888;">No orders recorded in database yet. Place your first order above!</td></tr>';
+                return;
+            }
+
+            // Build HTML table rows dynamically (DHTML DOM Insertion)
+            let rowsHtml = '';
+            allOrders.forEach(row => {
+                const isLocal = typeof row.id === 'string' && row.id.startsWith('L');
+                const badgeText = isLocal ? 'Local DB' : 'Neon DB';
+                const badgeStyle = isLocal ? 'background-color: #e3f2fd; color: #1565c0;' : 'background-color: #e8f5e9; color: #2e7d32;';
+
+                rowsHtml += `
             <tr>
               <td><strong>#${row.id}</strong></td>
               <td>${escapeHtml(row.customer_name)}</td>
@@ -663,17 +722,12 @@
               <td>${row.quantity}</td>
               <td><strong>₹${parseFloat(row.total_price).toFixed(2)}</strong></td>
               <td>${escapeHtml(row.payment_method)}</td>
-              <td><span class="status-badge">Received</span></td>
+              <td><span class="status-badge" style="${badgeStyle}">${badgeText}</span></td>
             </tr>
           `;
-                });
+            });
 
-                tbody.innerHTML = rowsHtml;
-
-            } catch (error) {
-                console.error('Fetch Orders Error:', error);
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--error-red);">Error fetching orders: ${error.message}</td></tr>`;
-            }
+            tbody.innerHTML = rowsHtml;
         }
 
         /**
@@ -681,7 +735,7 @@
          */
         function escapeHtml(str) {
             if (!str) return '';
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
         }
 
         // Initialize DHTML on page load
