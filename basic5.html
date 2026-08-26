@@ -480,7 +480,7 @@
          ========================================================================== -->
         <div class="orders-section">
             <div class="orders-header">
-                <h3>Live Database Orders (Neon PostgreSQL)</h3>
+                <h3>Live Database Orders</h3>
                 <button class="btn btn-refresh" onclick="fetchOrdersFromDB()">↺ Refresh Orders</button>
             </div>
 
@@ -656,7 +656,7 @@
                 }
 
                 if (savedToCloud) {
-                    showToast(`🎉 Order #${newOrderId} placed successfully! Saved to Neon PostgreSQL cloud database.`, true);
+                    showToast(`🎉 Order #${newOrderId} placed successfully! Saved to database order history.`, true);
                 } else {
                     showToast(`🎉 Order #${newOrderId} placed successfully! Recorded in local database order history.`, true);
                 }
