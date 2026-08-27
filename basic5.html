@@ -19,48 +19,357 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vijaykumar's Mutta Bonda Shop - DHTML Order System</title>
 
-  <!-- SECTION 1: DHTML CSS STYLES -->
+  <!-- SECTION 1: DHTML CSS STYLES (MOBILE RESPONSIVE & OPTIMIZED ALIGNMENT) -->
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #fff8f0, #ffe9d6); min-height: 100vh; padding: 25px 15px; color: #2b2b2b; }
-    .container { max-width: 750px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 15px 40px rgba(139, 26, 26, 0.15); border: 3px solid #8b1a1a; }
-    .header-banner { text-align: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px dashed #ff9f1c; }
-    .shop-title { color: #8b1a1a; font-size: 2rem; font-weight: 800; }
-    .shop-subtitle { color: #6b5b4e; font-size: 0.95rem; margin-top: 4px; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    @media (max-width: 550px) { .form-grid { grid-template-columns: 1fr; } }
-    .field-group { display: flex; flex-direction: column; }
-    .full-width { grid-column: span 2; }
-    @media (max-width: 550px) { .full-width { grid-column: span 1; } }
-    label { font-weight: 700; color: #5c1010; margin-bottom: 5px; font-size: 0.9rem; }
-    input, select { padding: 10px 12px; border: 2px solid #e0d0c0; border-radius: 8px; font-size: 0.95rem; }
-    input:focus, select:focus { outline: none; border-color: #8b1a1a; box-shadow: 0 0 6px rgba(139, 26, 26, 0.25); }
-    .bill-summary { background: #fff8f0; border: 2px dashed #ff9f1c; border-radius: 10px; padding: 15px; margin: 18px 0; display: flex; justify-content: space-between; align-items: center; }
-    .grand-total { font-size: 1.5rem; font-weight: 800; color: #8b1a1a; }
-    .button-group { text-align: center; margin-top: 15px; }
-    .btn { padding: 10px 24px; font-size: 0.95rem; font-weight: 700; border-radius: 8px; border: none; cursor: pointer; margin: 0 5px; }
-    .btn-submit { background: #8b1a1a; color: white; }
-    .btn-submit:hover { background: #5c1010; }
-    .btn-reset { background: #e0e0e0; color: #333; }
-    .btn-refresh { background: #2b2b2b; color: white; padding: 6px 14px; font-size: 0.85rem; }
-    .btn-danger { background: #c62828; color: white; padding: 6px 14px; font-size: 0.85rem; }
-    
-    /* Medium Size Confirmation Modal Popup */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; }
-    .modal-card { background: #fff; border-radius: 16px; padding: 30px 25px; width: 400px; max-width: 90%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.25); border: 3px solid #8b1a1a; animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    @keyframes modalPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+
+    body { 
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif; 
+      background: linear-gradient(135deg, #fff8f0, #ffe9d6); 
+      min-height: 100vh; 
+      padding: 20px 12px; 
+      color: #2b2b2b; 
+      line-height: 1.5;
+    }
+
+    .container { 
+      max-width: 750px; 
+      margin: 0 auto; 
+      background: #ffffff; 
+      border-radius: 16px; 
+      padding: 28px 24px; 
+      box-shadow: 0 15px 40px rgba(139, 26, 26, 0.12); 
+      border: 3px solid #8b1a1a; 
+    }
+
+    .header-banner { 
+      text-align: center; 
+      margin-bottom: 22px; 
+      padding-bottom: 14px; 
+      border-bottom: 2px dashed #ff9f1c; 
+    }
+
+    .shop-title { 
+      color: #8b1a1a; 
+      font-size: clamp(1.4rem, 5vw, 2.1rem); 
+      font-weight: 800; 
+      line-height: 1.25;
+    }
+
+    .shop-subtitle { 
+      color: #6b5b4e; 
+      font-size: clamp(0.85rem, 3vw, 0.95rem); 
+      margin-top: 6px; 
+    }
+
+    .form-grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 16px; 
+    }
+
+    .field-group { 
+      display: flex; 
+      flex-direction: column; 
+      width: 100%;
+    }
+
+    .full-width { 
+      grid-column: span 2; 
+    }
+
+    label { 
+      font-weight: 700; 
+      color: #5c1010; 
+      margin-bottom: 6px; 
+      font-size: 0.9rem; 
+    }
+
+    input, select { 
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px; 
+      border: 2px solid #e0d0c0; 
+      border-radius: 8px; 
+      font-size: 16px; /* 16px prevents iOS browser auto-zoom on focus */
+      color: #2b2b2b;
+      background-color: #fff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, select:focus { 
+      outline: none; 
+      border-color: #8b1a1a; 
+      box-shadow: 0 0 0 3px rgba(139, 26, 26, 0.18); 
+    }
+
+    .bill-summary { 
+      background: #fff8f0; 
+      border: 2px dashed #ff9f1c; 
+      border-radius: 12px; 
+      padding: 16px 18px; 
+      margin: 20px 0; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .summary-details p {
+      font-size: 0.95rem;
+      margin: 2px 0;
+    }
+
+    .summary-total {
+      text-align: right;
+    }
+
+    .grand-total { 
+      font-size: 1.6rem; 
+      font-weight: 800; 
+      color: #8b1a1a; 
+      line-height: 1.2;
+    }
+
+    .button-group { 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px; 
+    }
+
+    .btn { 
+      padding: 12px 24px; 
+      font-size: 0.95rem; 
+      font-weight: 700; 
+      border-radius: 8px; 
+      border: none; 
+      cursor: pointer; 
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit { 
+      background: #8b1a1a; 
+      color: white; 
+      flex: 1;
+      max-width: 220px;
+    }
+
+    .btn-submit:hover { 
+      background: #5c1010; 
+    }
+
+    .btn-reset { 
+      background: #e0e0e0; 
+      color: #333; 
+    }
+
+    .btn-reset:hover {
+      background: #d4d4d4;
+    }
+
+    .btn-refresh { 
+      background: #2b2b2b; 
+      color: white; 
+      padding: 8px 14px; 
+      font-size: 0.85rem; 
+    }
+
+    .btn-refresh:hover {
+      background: #404040;
+    }
+
+    .btn-danger { 
+      background: #c62828; 
+      color: white; 
+      padding: 8px 14px; 
+      font-size: 0.85rem; 
+    }
+
+    .btn-danger:hover {
+      background: #a71d1d;
+    }
+
+    /* Confirmation Modal Popup */
+    .modal-overlay { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0, 0, 0, 0.55); 
+      backdrop-filter: blur(4px); 
+      z-index: 1000; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 16px;
+    }
+
+    .modal-card { 
+      background: #fff; 
+      border-radius: 16px; 
+      padding: 28px 22px; 
+      width: 100%; 
+      max-width: 400px; 
+      text-align: center; 
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25); 
+      border: 3px solid #8b1a1a; 
+      animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    }
+
+    @keyframes modalPop { 
+      0% { transform: scale(0.85); opacity: 0; } 
+      100% { transform: scale(1); opacity: 1; } 
+    }
+
     .modal-icon { font-size: 3rem; margin-bottom: 8px; }
-    .modal-title { color: #8b1a1a; font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
+    .modal-title { color: #8b1a1a; font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; }
     .modal-message { color: #555; font-size: 0.95rem; }
 
-    .orders-section { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #e0d0c0; }
-    .orders-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .orders-table-wrapper { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.88rem; }
-    th, td { padding: 9px 11px; text-align: left; border-bottom: 1px solid #e0d0c0; }
-    th { background: #8b1a1a; color: white; font-weight: 700; }
+    /* Live Orders Section */
+    .orders-section { 
+      margin-top: 32px; 
+      padding-top: 22px; 
+      border-top: 2px dashed #e0d0c0; 
+    }
+
+    .orders-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 14px; 
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .orders-header h3 {
+      font-size: 1.15rem;
+    }
+
+    .orders-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .orders-table-wrapper { 
+      width: 100%;
+      overflow-x: auto; 
+      -webkit-overflow-scrolling: touch;
+      border-radius: 10px;
+      border: 1px solid #e0d0c0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      font-size: 0.88rem; 
+      min-width: 620px;
+    }
+
+    th, td { 
+      padding: 10px 12px; 
+      text-align: left; 
+      border-bottom: 1px solid #e0d0c0; 
+      white-space: nowrap;
+    }
+
+    th { 
+      background: #8b1a1a; 
+      color: white; 
+      font-weight: 700; 
+      position: sticky;
+      top: 0;
+    }
+
     tr:nth-child(even) { background: #fff9f4; }
-    .status-badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; background: #e8f5e9; color: #2e7d32; }
+    
+    .status-badge { 
+      display: inline-block; 
+      padding: 4px 9px; 
+      border-radius: 12px; 
+      font-size: 0.75rem; 
+      font-weight: 700; 
+      background: #e8f5e9; 
+      color: #2e7d32; 
+    }
+
+    /* Media Queries for Mobile Responsiveness & Alignment */
+    @media (max-width: 600px) {
+      body {
+        padding: 12px 8px;
+      }
+
+      .container {
+        padding: 20px 15px;
+        border-radius: 14px;
+        border-width: 2px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .full-width {
+        grid-column: span 1;
+      }
+
+      .bill-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px;
+      }
+
+      .summary-total {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        border-top: 1px dashed #ffd4a3;
+        padding-top: 8px;
+        margin-top: 4px;
+      }
+
+      .button-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: none;
+      }
+
+      .orders-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .orders-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .orders-actions .btn {
+        flex: 1;
+      }
+    }
   </style>
 </head>
 <body>
@@ -146,11 +455,11 @@
 
       <!-- Dynamic DHTML Live Bill Summary Box -->
       <div class="bill-summary">
-        <div>
+        <div class="summary-details">
           <p>Selected Item: <strong id="summaryItemName">Chicken Mutta Bonda</strong></p>
           <p>Unit Price: ₹<span id="summaryUnitPrice">60.00</span> | Qty: <span id="summaryQty">1</span></p>
         </div>
-        <div style="text-align: right;">
+        <div class="summary-total">
           <span style="font-size: 0.8rem; color: #666;">Total Amount</span>
           <div class="grand-total">₹<span id="summaryGrandTotal">60.00</span></div>
         </div>
@@ -167,7 +476,7 @@
     <div class="orders-section">
       <div class="orders-header">
         <h3 style="color: #8b1a1a;">Live Database Orders</h3>
-        <div>
+        <div class="orders-actions">
           <button class="btn btn-refresh" onclick="fetchOrdersFromDB()">↺ Refresh</button>
           <button class="btn btn-danger" onclick="clearAllOrders()">🗑 Clear All</button>
         </div>
@@ -183,7 +492,6 @@
             <tr><td colspan="8" style="text-align: center; color: #888;">Loading orders...</td></tr>
           </tbody>
         </table>
-      </div>
     </div>
   </div>
 
